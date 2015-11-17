@@ -13,7 +13,8 @@
   (let [mondays (d/mondays date)]
     (->> mondays
          (map week-volume)
-         (apply merge))))
+         ;(apply merge) ;map is no longer sorted
+         )))
 
 (twelve-days (dc/monday))
 
