@@ -19,12 +19,15 @@
 (defn group-by-day [html]
   (html/select html [:div.econoevents]))
 
-(defn bloomberg-important-dates [day month year]
+(defn bloomberg-important-dates [monday]
   ;http://bloomberg.econoday.com/byweek.asp?day=23&month=11&year=2015&cust=bloomberg-us&lid=0
-  (as-> (str "http://bloomberg.econoday.com/byweek.asp?day=23&month=11&year=2015&cust=bloomberg-us&lid=0") %
-        (ts/parse-xml %)
-        (html/select % [:td.events])
-        (map group-by-day %)
-        (map get-event-type %)
-        (map count-important %)))
+  (let [year (first monday)
+        month (inc (second monday))
+        day (last monday)]
+    (as-> (str "http://bloomberg.econoday.com/byweek.asp?day=" day "&month="month"&year="year"&cust=bloomberg-us&lid=0") %
+          (ts/parse-xml %)
+          (html/select % [:td.events])
+          (map group-by-day %)
+          (map get-event-type %)
+          (map count-important %))))
 

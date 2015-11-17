@@ -6,4 +6,5 @@
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [clj-tagsoup "0.3.0" :exclusions [org.clojure/clojure]]
                  [enlive "1.1.6"]
-                 [clojure.joda-time "0.6.0"]])
+                 [clojure.joda-time "0.6.0"]
+                 [date-clj "1.0.1"]])
