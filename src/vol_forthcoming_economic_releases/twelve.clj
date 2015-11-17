@@ -7,7 +7,8 @@
   (let [parts (d/date-parts monday)
         release-volume (c/bloomberg-important-dates parts)
         week-days (d/week-days monday)]
-    (zipmap week-days release-volume)))
+    (do (Thread/sleep 300)
+      (zipmap week-days release-volume))))
 
 (defn twelve-days [date]
   (let [mondays (d/mondays date)]
