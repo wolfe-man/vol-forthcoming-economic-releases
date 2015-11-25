@@ -4,7 +4,7 @@
 
 (defn count-important [icons]
   (->> icons
-       (filter #(re-find #"Star" %)) ;"[Star]" "[djStar]"
+       (filter #(re-find #"\[Star\]" %)) ;"\[Star\]" "\[djStar\]"
        (count)))
 
 (defn get-events [html]
@@ -19,11 +19,11 @@
 (defn group-by-day [html]
   (html/select html [:div.econoevents]))
 
-(defn bloomberg-important-dates [monday]
+(defn bloomberg-important-dates [long-monday]
   ;http://bloomberg.econoday.com/byweek.asp?day=23&month=11&year=2015&cust=bloomberg-us&lid=0
-  (let [year (first monday)
-        month (inc (second monday))
-        day (last monday)]
+  (let [year (first long-monday)
+        month (inc (second long-monday))
+        day (last long-monday)]
     (as-> (str "http://bloomberg.econoday.com/byweek.asp?day=" day "&month="month"&year="year"&cust=bloomberg-us&lid=0") %
           (ts/parse-xml %)
           (html/select % [:td.events])
