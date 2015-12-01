@@ -19,11 +19,11 @@
 (defn group-by-day [html]
   (html/select html [:div.econoevents]))
 
-(defn bloomberg-important-dates [long-monday]
+(defn bloomberg-important-dates [monday-parts]
   ;http://bloomberg.econoday.com/byweek.asp?day=23&month=11&year=2015&cust=bloomberg-us&lid=0
-  (let [year (first long-monday)
-        month (inc (second long-monday))
-        day (last long-monday)]
+  (let [year (first monday-parts)
+        month (inc (second monday-parts))
+        day (last monday-parts)]
     (as-> (str "http://bloomberg.econoday.com/byweek.asp?day=" day "&month="month"&year="year"&cust=bloomberg-us&lid=0") %
           (ts/parse-xml %)
           (html/select % [:td.events])
