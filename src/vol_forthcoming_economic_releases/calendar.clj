@@ -2,10 +2,14 @@
   (:require [pl.danieljanus.tagsoup :as ts]
             [net.cgrand.enlive-html :as html]))
 
-(defn get-event-names [html]
-  (->> (html/select html [:a])
-       (map :content)
-       (ffirst)))
+
+
+(defn get-event-names-times [html]
+  (let [event-name (->> (html/select html [:a]) (map :content) (ffirst))
+        event-name-time (html/text html)
+        event-time (clojure.string/replace event-name-time event-name "")]
+    [event-name event-time]
+    ))
 
 (defn get-significant-events [html]
   (as-> (html/select html [:a :span.star-img :img]) %
@@ -27,8 +31,8 @@
           (map group-by-day %)
           (map #(map get-significant-events %) %)
           (map #(remove nil? %) %)
-          (map #(map get-event-names %) %)
-          (map #(hash-map (count %) %) %)
+          (map #(map get-event-names-times %) %)
+          ;(map #(hash-map (count %) %) %)
           )))
 
-;(bloomberg-important-dates [2015 10 23])
+(bloomberg-important-dates [2015 10 23])
