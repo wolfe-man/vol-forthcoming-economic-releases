@@ -2,19 +2,16 @@
   (:require [pl.danieljanus.tagsoup :as ts]
             [net.cgrand.enlive-html :as html]))
 
-(defn count-important [icons]
-  (->> icons
-       (filter #(re-find #"\[Star\]" %)) ;"\[Star\]" "\[djStar\]"
-       (count)))
+(defn get-event-names [html]
+  (->> (html/select html [:a])
+       (map :content)
+       (ffirst)))
 
-(defn get-events [html]
-  (->> (:content html)
-       (map #((comp :alt :attrs) %))
-       (first)))
-
-(defn get-event-type [html]
-  (let [events (html/select html [:a :span])]
-    (map get-events events)))
+(defn get-significant-events [html]
+  (as-> (html/select html [:a :span.star-img :img]) %
+        (map #((comp :alt :attrs) %) %)
+        (if (= "[Star]" (first %)) html)
+        ))
 
 (defn group-by-day [html]
   (html/select html [:div.econoevents]))
@@ -28,6 +25,10 @@
           (ts/parse-xml %)
           (html/select % [:td.events])
           (map group-by-day %)
-          (map get-event-type %)
-          (map count-important %))))
+          (map #(map get-significant-events %) %)
+          (map #(remove nil? %) %)
+          (map #(map get-event-names %) %)
+          (map #(hash-map (count %) %) %)
+          )))
 
+;(bloomberg-important-dates [2015 10 23])
